@@ -1,0 +1,31 @@
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "28017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  http:
+    container_name: todo-http-service
+    build: ./todo-back
+    ports:
+      - "5999:5999"
+    depends_on:
+      - mongodb
+    env_file:
+      - .env
+
+  front:
+    container_name: todo-front-service
+    build: ./todo-front
+    ports:
+      - "5998:5998"
+    depends_on:
+      - http
+    env_file:
+      - .env
+
+volumes:
+  mongo-data:
+    driver: local
